@@ -1388,6 +1388,21 @@ extern "rust-intrinsic" {
     /// [`f64::round`](../../std/primitive.f64.html#method.round)
     pub fn roundf64(x: f64) -> f64;
 
+    /// Returns the nearest integer to an `f32`. Rounds half-way to the nearest even
+    /// integer.
+    ///
+    /// The stabilized version of this intrinsic is
+    /// [`f32::round`](../../std/primitive.f32.html#method.round)
+    #[cfg(not(bootstrap))]
+    pub fn roundevenf32(x: f32) -> f32;
+    /// Returns the nearest integer to an `f32`. Rounds half-way to the nearest even
+    /// integer.
+    ///
+    /// The stabilized version of this intrinsic is
+    /// [`f64::round`](../../std/primitive.f64.html#method.round)
+    #[cfg(not(bootstrap))]
+    pub fn roundevenf64(x: f64) -> f64;
+
     /// Float addition that allows optimizations based on algebraic rules.
     /// May assume inputs are finite.
     ///
