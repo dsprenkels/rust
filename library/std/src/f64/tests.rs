@@ -203,12 +203,30 @@ fn test_round() {
     assert_approx_eq!(1.3f64.round(), 1.0f64);
     assert_approx_eq!(1.5f64.round(), 2.0f64);
     assert_approx_eq!(1.7f64.round(), 2.0f64);
+    assert_approx_eq!(2.5f64.round(), 3.0f64);
     assert_approx_eq!(0.0f64.round(), 0.0f64);
     assert_approx_eq!((-0.0f64).round(), -0.0f64);
     assert_approx_eq!((-1.0f64).round(), -1.0f64);
     assert_approx_eq!((-1.3f64).round(), -1.0f64);
     assert_approx_eq!((-1.5f64).round(), -2.0f64);
     assert_approx_eq!((-1.7f64).round(), -2.0f64);
+    assert_approx_eq!((-2.5f64).round(), -3.0f64);
+}
+
+#[test]
+fn test_round_to_even() {
+    assert_approx_eq!(1.0f64.round_to_even(), 1.0f64);
+    assert_approx_eq!(1.3f64.round_to_even(), 1.0f64);
+    assert_approx_eq!(1.5f64.round_to_even(), 2.0f64);
+    assert_approx_eq!(1.7f64.round_to_even(), 2.0f64);
+    assert_approx_eq!(2.5f64.round_to_even(), 2.0f64);
+    assert_approx_eq!(0.0f64.round_to_even(), 0.0f64);
+    assert_approx_eq!((-0.0f64).round_to_even(), -0.0f64);
+    assert_approx_eq!((-1.0f64).round_to_even(), -1.0f64);
+    assert_approx_eq!((-1.3f64).round_to_even(), -1.0f64);
+    assert_approx_eq!((-1.5f64).round_to_even(), -2.0f64);
+    assert_approx_eq!((-1.7f64).round_to_even(), -2.0f64);
+    assert_approx_eq!((-2.5f64).round_to_even(), -2.0f64);
 }
 
 #[test]
