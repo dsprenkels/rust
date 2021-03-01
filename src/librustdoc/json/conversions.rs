@@ -182,7 +182,7 @@ fn from_clean_item_kind(item: clean::ItemKind, tcx: TyCtxt<'_>) -> ItemEnum {
             bounds: g.into_iter().map(Into::into).collect(),
             default: t.map(Into::into),
         },
-        StrippedItem(inner) => from_clean_item_kind(*inner, tcx).into(),
+        StrippedItem(inner) => from_clean_item_kind(*inner, tcx),
         PrimitiveItem(_) | KeywordItem(_) => {
             panic!("{:?} is not supported for JSON output", item)
         }
@@ -408,7 +408,7 @@ impl From<clean::FnDecl> for FnDecl {
 
 impl From<clean::Trait> for Trait {
     fn from(trait_: clean::Trait) -> Self {
-        let clean::Trait { unsafety, items, generics, bounds, is_spotlight: _, is_auto } = trait_;
+        let clean::Trait { unsafety, items, generics, bounds, is_auto } = trait_;
         Trait {
             is_auto,
             is_unsafe: unsafety == rustc_hir::Unsafety::Unsafe,

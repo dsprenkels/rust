@@ -523,7 +523,7 @@ impl f32 {
         unsafe { cmath::fdimf(self, other) }
     }
 
-    /// Returns the cubic root of a number.
+    /// Returns the cube root of a number.
     ///
     /// # Examples
     ///

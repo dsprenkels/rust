@@ -37,8 +37,8 @@ crate struct JsonRenderer<'tcx> {
     cache: Rc<Cache>,
 }
 
-impl JsonRenderer<'_> {
-    fn sess(&self) -> &Session {
+impl JsonRenderer<'tcx> {
+    fn sess(&self) -> &'tcx Session {
         self.tcx.sess
     }
 
@@ -87,6 +87,7 @@ impl JsonRenderer<'_> {
             .filter_map(|(&id, trait_item)| {
                 // only need to synthesize items for external traits
                 if !id.is_local() {
+                    let trait_item = &trait_item.trait_;
                     trait_item.items.clone().into_iter().for_each(|i| self.item(i).unwrap());
                     Some((
                         from_def_id(id),

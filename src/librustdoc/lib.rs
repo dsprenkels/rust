@@ -14,7 +14,6 @@
 #![feature(never_type)]
 #![feature(once_cell)]
 #![feature(type_ascription)]
-#![feature(str_split_once)]
 #![feature(iter_intersperse)]
 #![recursion_limit = "256"]
 #![deny(rustc::internal)]
@@ -432,13 +431,16 @@ fn usage(argv0: &str) {
         (option.apply)(&mut options);
     }
     println!("{}", options.usage(&format!("{} [options] <input>", argv0)));
+    println!("    @path               Read newline separated options from `path`\n");
     println!("More information available at https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html")
 }
 
 /// A result type used by several functions under `main()`.
 type MainResult = Result<(), ErrorReported>;
 
-fn main_args(args: &[String]) -> MainResult {
+fn main_args(at_args: &[String]) -> MainResult {
+    let args = rustc_driver::args::arg_expand_all(at_args);
+
     let mut options = getopts::Options::new();
     for option in opts() {
         (option.apply)(&mut options);

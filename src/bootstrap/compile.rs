@@ -27,7 +27,7 @@ use crate::config::TargetSelection;
 use crate::dist;
 use crate::native;
 use crate::tool::SourceType;
-use crate::util::{exe, is_dylib, symlink_dir};
+use crate::util::{exe, is_debug_info, is_dylib, symlink_dir};
 use crate::{Compiler, DependencyType, GitRepo, Mode};
 
 #[derive(Debug, PartialOrd, Ord, Copy, Clone, PartialEq, Eq, Hash)]
@@ -188,6 +188,12 @@ fn copy_self_contained_objects(
                 &mut target_deps,
                 DependencyType::TargetSelfContained,
             );
+        }
+        for &obj in &["crtbegin.o", "crtbeginS.o", "crtend.o", "crtendS.o"] {
+            let src = compiler_file(builder, builder.cc(target), target, obj);
+            let target = libdir_self_contained.join(obj);
+            builder.copy(&src, &target);
+            target_deps.push((target, DependencyType::TargetSelfContained));
         }
     } else if target.ends_with("-wasi") {
         let srcdir = builder.wasi_root(target).unwrap().join("lib/wasm32-wasi");
@@ -1049,7 +1055,8 @@ impl Step for Assemble {
         let src_libdir = builder.sysroot_libdir(build_compiler, host);
         for f in builder.read_dir(&src_libdir) {
             let filename = f.file_name().into_string().unwrap();
-            if is_dylib(&filename) && !proc_macros.contains(&filename) {
+            if (is_dylib(&filename) || is_debug_info(&filename)) && !proc_macros.contains(&filename)
+            {
                 builder.copy(&f.path(), &rustc_libdir.join(&filename));
             }
         }
@@ -1166,6 +1173,7 @@ pub fn run_cargo(
             if !(filename.ends_with(".rlib")
                 || filename.ends_with(".lib")
                 || filename.ends_with(".a")
+                || is_debug_info(&filename)
                 || is_dylib(&filename)
                 || (is_check && filename.ends_with(".rmeta")))
             {

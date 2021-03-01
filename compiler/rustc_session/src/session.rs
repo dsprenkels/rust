@@ -77,6 +77,7 @@ impl Limit {
 
     /// Check that `value` is within the limit. Ensures that the same comparisons are used
     /// throughout the compiler, as mismatches can cause ICEs, see #72540.
+    #[inline]
     pub fn value_within_limit(&self, value: usize) -> bool {
         value <= self.0
     }
@@ -347,10 +348,12 @@ impl Session {
         self.crate_types.set(crate_types).expect("`crate_types` was initialized twice")
     }
 
+    #[inline]
     pub fn recursion_limit(&self) -> Limit {
         self.recursion_limit.get().copied().unwrap()
     }
 
+    #[inline]
     pub fn type_length_limit(&self) -> Limit {
         self.type_length_limit.get().copied().unwrap()
     }
@@ -959,19 +962,19 @@ impl Session {
     }
 
     pub fn print_perf_stats(&self) {
-        println!(
+        eprintln!(
             "Total time spent computing symbol hashes:      {}",
             duration_to_secs_str(*self.perf_stats.symbol_hash_time.lock())
         );
-        println!(
+        eprintln!(
             "Total queries canonicalized:                   {}",
             self.perf_stats.queries_canonicalized.load(Ordering::Relaxed)
         );
-        println!(
+        eprintln!(
             "normalize_generic_arg_after_erasing_regions:   {}",
             self.perf_stats.normalize_generic_arg_after_erasing_regions.load(Ordering::Relaxed)
         );
-        println!(
+        eprintln!(
             "normalize_projection_ty:                       {}",
             self.perf_stats.normalize_projection_ty.load(Ordering::Relaxed)
         );
